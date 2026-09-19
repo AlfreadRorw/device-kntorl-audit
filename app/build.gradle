@@ -28,7 +28,10 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    lintOptions { abortOnError false; checkReleaseBuilds false }
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
 }
 
 dependencies {
