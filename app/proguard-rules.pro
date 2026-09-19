@@ -1,0 +1,2 @@
+-keep class com.audit.device.** { *; }
+-dontwarn androidx.**

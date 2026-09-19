@@ -1,0 +1,44 @@
+name: Build Audit APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Decode google-services.json
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_B64 }}" | base64 -d > app/google-services.json
+          echo "size: $(wc -c < app/google-services.json)"
+
+      - name: Setup Gradle wrapper
+        run: gradle wrapper --gradle-version 8.5
+
+      - name: Grant execute
+        run: chmod +x ./gradlew
+
+      - name: Build APK
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
+
+      - name: Prepare artifact
+        run: |
+          mkdir -p output
+          cp app/build/outputs/apk/debug/app-debug.apk output/AuditTool.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AuditTool-APK
+          path: output/AuditTool.apk
+          retention-days: 30

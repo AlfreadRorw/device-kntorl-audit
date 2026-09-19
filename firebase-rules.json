@@ -1,0 +1,17 @@
+{
+  "rules": {
+    "devices": {
+      "$deviceId": {
+        ".read": "auth != null",
+        ".write": true,
+        "commands": { ".read": true, ".write": "auth != null" },
+        "results": { ".read": "auth != null", ".write": true },
+        "audit_log": { ".read": "auth != null", ".write": true }
+      }
+    },
+    "config": {
+      ".read": true,
+      ".write": "auth != null"
+    }
+  }
+}
